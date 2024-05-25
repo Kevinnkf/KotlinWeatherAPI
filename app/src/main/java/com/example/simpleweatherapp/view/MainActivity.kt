@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.Glide
 import com.example.simpleweatherapp.Model.CurrentWeatherResponse
 import com.example.simpleweatherapp.R
 import com.example.simpleweatherapp.viewmodel.MainViewModel
@@ -26,7 +27,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Initialize the MainViewModel
         mainViewModel = MainViewModel()
+        
+        // Subscribe to LiveData objects
         subscribe()
 
         etCityName = findViewById(R.id.et_city_name)
@@ -46,6 +50,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    //Subscribes to LiveData objects in mainViewModel to observe changes in loading state, error state, and weather data.
     private fun subscribe() {
         mainViewModel.isLoading.observe(this) { isLoading ->
             // Set the result text to Loading
@@ -60,12 +65,14 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // Display weather data to the UI
         mainViewModel.weatherData.observe(this) { weatherData ->
             // Display weather data to the UI
             setResultText(weatherData)
         }
     }
 
+    // Function to set the result text based on weather data
     private fun setResultText(weatherData: CurrentWeatherResponse) {
         val resultText = StringBuilder("Result:\n")
 
@@ -80,11 +87,26 @@ class MainActivity : AppCompatActivity() {
         weatherData.current.let { current ->
             current?.condition.let { condition ->
                 resultText.append("Condition: ${condition?.text}\n")
+                setResultImage(condition?.icon)
             }
             resultText.append("Celcius: ${current?.tempC}\n")
             resultText.append("Fahrenheit: ${current?.tempF}\n")
         }
 
         tvResult.text = resultText
+    }
+
+    private fun setResultImage(imageURL: String?){
+        //display the image when the url is available
+        imageURL.let{url ->
+            Glide.with(applicationContext)
+                .load("https: $url")
+                .into(imgCondition)
+
+            imgCondition.visibility = View.INVISIBLE
+            return
+        }
+        //if the url image is null. set to gone
+        imgCondition.visibility = View.GONE
     }
 }
