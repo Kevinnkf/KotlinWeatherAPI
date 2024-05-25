@@ -1,8 +1,11 @@
+@file:Suppress("UNREACHABLE_CODE")
+
 package com.example.simpleweatherapp.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.view.View.GONE
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -29,7 +32,7 @@ class MainActivity : AppCompatActivity() {
 
         // Initialize the MainViewModel
         mainViewModel = MainViewModel()
-        
+
         // Subscribe to LiveData objects
         subscribe()
 
@@ -60,7 +63,7 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.isError.observe(this) { isError ->
             // Hide display image and set the result text to the error message
             if (isError) {
-                imgCondition.visibility = View.GONE
+                imgCondition.visibility = GONE
                 tvResult.text = mainViewModel.errorMessage
             }
         }
@@ -106,7 +109,6 @@ class MainActivity : AppCompatActivity() {
             imgCondition.visibility = View.INVISIBLE
             return
         }
-        //if the url image is null. set to gone
-        imgCondition.visibility = View.GONE
+        this.imgCondition.visibility = GONE
     }
 }
